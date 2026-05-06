@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Gemini Chat App</title>
+    <style>
+
+#chat-container {
+
+    width: 700px;
+    height: 400px;
+
+    border: 2px solid #ccc;
+
+    margin-top: 20px;
+
+    padding: 15px;
+
+    overflow-y: auto;
+
+    font-size: 18px;
+}
+
+</style>
+</head>
+
+<body style ="background-color: beige">
+
+    <h1 style="color: red; font-size: 72px; text-align: center;">Gemini Chat Application</h1>
+
+    <div>
+        <label for="message"
+               style="font-size: 28px; font-weight: bold;">
+            Type Your Message:</label>
+
+        <input type="text"
+               id="message"
+               name="message"
+               style="width: 300px; padding: 10px; font-size: 16px;"
+               placeholder="Enter your message here...">
+
+        <button onclick="sendMessage()"
+                style="padding: 10px 20px; font-size: 16px; background-color: blue; color: white; border: none; cursor: pointer;">
+            Send
+        </button>
+    </div>
+
+    <div id="chat-container"
+         style="background-color: bisque;">
+
+    </div>
+
+    <script>
+
+    async function sendMessage() {
+
+        const message =
+            document.getElementById('message').value;
+
+        const chatContainer =
+            document.getElementById('chat-container');
+
+        // Prevent empty messages
+        if (!message.trim()) {
+            return;
+        }
+
+        // Show user message
+        chatContainer.innerHTML += `
+            <div style="margin-top: 15px;">
+                <strong>You:</strong> ${message}
+            </div>
+        `;
+
+        try {
+
+            const response = await fetch('/chat', {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    message: message
+                })
+            });
+
+            const data = await response.json();
+
+            // Show Gemini response
+            chatContainer.innerHTML += `
+                <div style="margin-bottom: 20px; color: blue;">
+                    <strong>Gemini:</strong> ${data.response}
+                </div>
+            `;
+
+            // Auto-scroll to latest message
+            chatContainer.scrollTop =
+                chatContainer.scrollHeight;
+
+        } catch (error) {
+
+            chatContainer.innerHTML += `
+                <div style="color: red;">
+                    Error communicating with server.
+                </div>
+            `;
+        }
+
+        // Clear input field
+        document.getElementById('message').value = '';
+    }
+
+    </script>
+
+</body>
+
+</html>
