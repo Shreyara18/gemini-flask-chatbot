@@ -5,3 +5,4 @@ streamlit
 flask
 python-dotenv
 google-generativeai
+gunicorn
