@@ -11,12 +11,7 @@ app = Flask(__name__)
 
 # Gemini API key
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-print("\nAVAILABLE MODELS:\n")
-
-for m in genai.list_models():
-    print(m.name)
-    
+   
 # Load the Gemini model
 model = genai.GenerativeModel("models/gemini-flash-lite-latest")
 # Define the route for the home page
